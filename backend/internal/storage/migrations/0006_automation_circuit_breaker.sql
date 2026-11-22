@@ -1,0 +1,18 @@
+-- 0006_automation_circuit_breaker.sql
+--
+-- Adds the column backing automation's circuit breaker (spec section
+-- 11's "actions involving destructive or privileged operations must be
+-- explicitly confirmed/configured" combined with Phase 8's finding that
+-- the cooldown floor alone bounds only the *rate* of a repeatedly
+-- crashing automation rule, never *whether* it keeps running forever —
+-- see automation/validate.go's minRuleCooldownSeconds doc comment and
+-- MaxConsecutiveFailures in automation/types.go for the full reasoning
+-- and the resulting fix, which is what this column stores).
+--
+-- Tracks the same "actual executions only, never skips" streak
+-- Engine.trackedRule keeps in memory (see recordOutcome) so a reload
+-- after a restart reproduces the same auto-disable decision an
+-- uninterrupted run would have made -- the identical reasoning
+-- 0005_automation_rules.sql's run_count column already documents for
+-- the rest of Status's live-tracking fields.
+ALTER TABLE automation_rules ADD COLUMN consecutive_failures INTEGER NOT NULL DEFAULT 0;

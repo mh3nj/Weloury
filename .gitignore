@@ -1,0 +1,22 @@
+# Build artifacts
+apps/desktop/target/
+apps/desktop/weloury-core
+apps/desktop/weloury-core.exe
+backend/weloury-core
+backend/weloury-core.exe
+frontend/dist/
+frontend/node_modules/
+
+# Weloury core's runtime data directory when run directly from a source
+# checkout during development (see DEVELOPMENT.md) — config.json,
+# weloury.db, weloury.db-wal, weloury.db-shm, weloury-core.log*.
+.weloury-dev-data/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.swp
