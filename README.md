@@ -1,104 +1,90 @@
 <p align="center">
-  <img src="docs/logo.svg" alt="Weloury logo" width="104">
+  <img src="docs/logo.svg" alt="Weloury logo" width="112">
 </p>
 
 <h1 align="center">Weloury</h1>
 
 <p align="center">
-  A local desktop app for keeping track of what is happening on your machine.
+  A local desktop workspace for understanding and managing your own machine.
 </p>
 
-Weloury brings system information and everyday administration tools into one place. It is being built with a Go backend, a React and TypeScript interface, and a Tauri desktop shell.
+<p align="center">
+  <a href="https://mh3nj.github.io/Weloury/">Project website</a>
+  ·
+  <a href="https://github.com/mh3nj/Weloury">Source code</a>
+  ·
+  <a href="https://github.com/mh3nj/Weloury/releases">Releases</a>
+</p>
 
-The project is still in development. The notes below describe the code that is in the repository today, including the parts that are not ready yet.
+---
 
-## Current status
+## About
 
-The Go backend and the frontend have been developed and exercised on Linux. The Go code also has cross-compilation checks for Windows and macOS, but those builds have not been run on real machines.
+Weloury brings everyday system tools into one desktop application. Instead of jumping between process viewers, service managers, container tools, terminal commands, and log windows, you can work with them from one place.
 
-**The complete desktop app cannot currently be built from the public repository checkout.** The scripts and release workflow expect an `apps/desktop` Tauri project, but that directory is not present in the current repository tree. The Rust/Tauri shell has not yet been compiled end to end.
+The application is local-first. Its core runs on your machine, stores application data in SQLite, and communicates with the desktop interface over a loopback connection. The local features do not require an account or a hosted service.
 
-There are no published installers or GitHub Releases at the moment. The release workflow is present, but it currently uploads build artifacts from a workflow run rather than creating a GitHub Release.
+Weloury began under the name **FORGE**. It was later renamed and given its own identity.
 
-## What is implemented
+## What it includes
 
-The current interface has these sections:
+- **Overview:** machine identity, uptime, CPU and memory information.
+- **Processes:** a searchable process list, process details, and confirmed termination actions.
+- **Services:** service inspection and supported start, stop, and restart actions, subject to platform support and user permissions.
+- **Storage:** mounted filesystems and their usage.
+- **Health checks:** checks for processes, services, ports, HTTP endpoints, commands, and resource thresholds.
+- **Logs and events:** application logs and recorded system and application activity.
+- **Schedules:** one-time and recurring tasks.
+- **Automation:** event or schedule triggers, conditions, and ordered actions.
+- **Network:** network interfaces, listening ports, and active connections.
+- **Containers:** Docker container discovery, basic lifecycle actions, and recent logs.
+- **Diagnostics:** an exportable snapshot for troubleshooting.
 
-- **Overview** — system identity and resource information
-- **Processes** — running process list, search, details and termination controls
-- **Services** — service status and supported start/stop/restart actions
-- **Storage** — mounted filesystems and usage
-- **Network** — interfaces, addresses, ports and connections
-- **GPU** and **Startup** — hardware and startup-item views
-- **Containers** — Docker container information and controls
-- **Logs** and **Events** — application logs and recorded activity
-- **Health** — checks for processes, services, ports, endpoints and resource thresholds
-- **Automation** and **Schedules** — event-driven rules and scheduled actions
-- **Settings** — application preferences and diagnostics
+Available capabilities vary by operating system. Some inspection features are platform-specific. Docker features require a Docker daemon to be installed and running.
 
-Some information and actions depend on the operating system, permissions, or tools installed on the machine. Docker features, for example, need a Docker daemon to be available. The current platform verification is not equal across operating systems; see [DEVELOPMENT.md](DEVELOPMENT.md) for the details.
+## Windows installers
 
-## How it is put together
+Windows installer builds are available in MSI and NSIS formats. The installer files are distributed as assets on the GitHub Releases page when the maintainer attaches them to a release. If no installer asset is listed there yet, it has not been published as a download.
 
-| Part | Technology |
-|---|---|
-| Backend | Go |
-| Desktop shell | Tauri 2 and Rust |
-| Interface | React, TypeScript and Vite |
-| Local database | SQLite |
-| Communication | Local JSON-over-HTTP protocol |
+Before running an installer, check that it came from the official [Weloury Releases](https://github.com/mh3nj/Weloury/releases) page. If checksums are provided with a release, verify the downloaded file against them.
 
-The Go backend owns the application logic, system access, event handling and persistence. The Tauri shell is intended to start the backend and manage its lifecycle. The frontend talks to the backend over a loopback connection.
+## Technical overview
 
-For the design and the reasoning behind these choices, see [ARCHITECTURE.md](ARCHITECTURE.md).
+The original application is built from three main parts:
 
-## Development
+- **Go:** system operations, application logic, persistence, health checks, scheduling, automation, and the local API.
+- **React and TypeScript:** the desktop interface.
+- **Rust and Tauri:** the native desktop shell and lifecycle management for the Go backend.
 
-### Requirements
+The Go backend uses SQLite for local persistence. The desktop interface communicates with it through a local HTTP interface bound to loopback. It is not intended to expose the API to the network.
 
-- Go 1.22 or newer
-- Node.js 20 recommended
-- Rust 1.85 or newer, with Cargo, for the Tauri desktop shell
+For implementation details, see [ARCHITECTURE.md](ARCHITECTURE.md).
 
-### Backend
+## Project status
 
-```bash
-cd backend
-go test -race ./...
-go build ./...
-```
+Weloury is no longer being developed as a standalone application.
 
-### Frontend
+Its work is being carried forward together with Stellarie into a much larger commercial application. That successor is a substantial rewrite in Rust, not a continuation of this codebase. This repository remains available as a record of the original project and its implementation. No further standalone feature development is planned here.
 
-```bash
-cd frontend
-npm ci
-npm run typecheck
-npm run lint
-npm run build
-```
+## Building from source
 
-The frontend currently has no separate automated test runner. TypeScript checks, ESLint and the production build are the checks available there.
-
-### Desktop app
-
-The intended development command is:
+The original project uses Go, Rust, Node.js, and the Tauri CLI. Toolchain requirements and build steps are documented in [DEVELOPMENT.md](DEVELOPMENT.md).
 
 ```bash
 ./scripts/dev.sh
 ```
 
-It currently cannot complete from this checkout because `apps/desktop` is missing. Restore the Tauri project before relying on the desktop development or release scripts.
+The desktop development and release scripts require the Tauri project at `apps/desktop`. Make sure that directory is present in your checkout before running them. Backend or frontend checks on their own do not verify a complete desktop build.
 
-## Project documents
+## Documentation
 
 - [Architecture](ARCHITECTURE.md)
-- [Development notes](DEVELOPMENT.md)
-- [Installation status](INSTALL.md)
+- [Development](DEVELOPMENT.md)
+- [Installation](INSTALL.md)
 - [Security](SECURITY.md)
+- [Change history](CHANGELOG.md)
 - [Contributing](CONTRIBUTING.md)
-- [Changelog](CHANGELOG.md)
 
 ## License
 
-There is currently no `LICENSE` file in the repository. Until a license is added, don't assume that the code is available for unrestricted reuse.
+Weloury is released under the [MIT License](LICENSE).

@@ -1,272 +1,224 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f5f1eb">
-  <meta name="description" content="Weloury is a local desktop app for keeping track of processes, services, storage, network activity and more.">
+  <meta name="theme-color" content="#111110">
+  <meta name="description" content="Weloury is a local-first desktop workspace for understanding and managing your machine.">
+  <title>Weloury | A clearer view of your machine</title>
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Weloury">
-  <meta property="og:description" content="A local desktop app for understanding what is happening on your machine.">
+  <meta property="og:title" content="Weloury | A clearer view of your machine">
+  <meta property="og:description" content="A local desktop workspace for processes, services, storage, network activity, containers and automation.">
   <meta property="og:image" content="logo.svg">
-  <title>Weloury — your machine, in view</title>
-  <link rel="icon" type="image/svg+xml" href="./logo.svg">
+  <link rel="icon" href="./logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    :root {
-      color-scheme: light;
-      --paper: #f5f1eb;
-      --paper-deep: #ebe4da;
-      --ink: #252421;
-      --muted: #716e68;
-      --line: #ded7cc;
-      --accent: #d85a3a;
-      --accent-dark: #b8462b;
-      --card: #fffdf9;
-      --green: #536c59;
-      --serif: Georgia, "Times New Roman", serif;
-      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-      --max: 1120px;
-    }
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      background: var(--paper);
-      color: var(--ink);
-      font: 16px/1.65 var(--sans);
-      -webkit-font-smoothing: antialiased;
-    }
-    a { color: inherit; text-decoration: none; }
-    a:hover { color: var(--accent-dark); }
-    .shell { width: min(var(--max), calc(100% - 48px)); margin: 0 auto; }
-    header {
-      min-height: 88px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-      border-bottom: 1px solid var(--line);
-    }
-    .brand { display: inline-flex; align-items: center; gap: 12px; font-size: 1.1rem; font-weight: 750; letter-spacing: -.045em; }
-    .brand img { display: block; width: 38px; height: 38px; object-fit: contain; }
-    nav { display: flex; align-items: center; gap: 27px; color: var(--muted); font-size: .88rem; }
-    nav a:hover { color: var(--ink); }
-    .hero {
-      display: grid;
-      grid-template-columns: minmax(0, 1.15fr) minmax(260px, .85fr);
-      align-items: center;
-      gap: 70px;
-      padding: 100px 0 94px;
-    }
-    .eyebrow {
-      display: inline-flex; align-items: center; gap: 9px;
-      color: var(--accent-dark); font: 600 .72rem/1.4 var(--mono);
-      text-transform: uppercase; letter-spacing: .1em;
-    }
-    .eyebrow::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
-    h1 {
-      max-width: 720px; margin: 23px 0 20px;
-      font: 500 clamp(3.5rem, 8vw, 6.5rem)/.98 var(--serif);
-      letter-spacing: -.065em;
-    }
-    h1 em { color: var(--accent); font-style: normal; }
-    .lead { max-width: 620px; color: #5f5b55; font-size: clamp(1.05rem, 1.7vw, 1.22rem); }
-    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 31px; }
-    .button {
-      min-height: 47px; display: inline-flex; align-items: center; justify-content: center;
-      padding: 0 17px; border: 1px solid var(--ink); border-radius: 4px;
-      font-size: .88rem; font-weight: 650; transition: background .18s, color .18s, transform .18s;
-    }
-    .button:hover { transform: translateY(-2px); }
-    .button.primary { background: var(--ink); color: white; }
-    .button.primary:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
-    .button.secondary { border-color: var(--line); }
-    .hero-art {
-      position: relative; min-height: 360px; display: grid; place-items: center;
-      border: 1px solid var(--line); background: var(--paper-deep); overflow: hidden;
-    }
-    .hero-art::before, .hero-art::after {
-      content: ""; position: absolute; width: 280px; height: 280px;
-      border: 1px solid rgba(216,90,58,.22); border-radius: 50%;
-    }
-    .hero-art::after { width: 220px; height: 220px; }
-    .hero-art img { position: relative; z-index: 1; width: min(58%, 220px); height: auto; filter: drop-shadow(0 18px 18px rgba(70,42,30,.12)); }
-    .art-note { position: absolute; bottom: 18px; left: 20px; color: #81786e; font: .68rem var(--mono); letter-spacing: .08em; text-transform: uppercase; }
-    .status {
-      display: grid; grid-template-columns: auto 1fr; gap: 17px;
-      padding: 23px 25px; border: 1px solid #e4c5b8; background: #f8e9e1;
-    }
-    .status-mark { color: var(--accent-dark); font: 1.1rem var(--mono); }
-    .status strong { display: block; margin-bottom: 3px; font-size: .95rem; }
-    .status p { margin: 0; color: #76645c; font-size: .9rem; }
-    section.content { padding: 92px 0; }
-    .section-head { max-width: 680px; margin-bottom: 34px; }
-    .section-label { color: var(--accent-dark); font: 600 .7rem var(--mono); text-transform: uppercase; letter-spacing: .12em; }
-    h2 { margin: 11px 0 12px; font: 500 clamp(2.3rem, 4.5vw, 3.7rem)/1.08 var(--serif); letter-spacing: -.05em; }
-    .section-head p { margin: 0; color: var(--muted); }
-    .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 13px; }
-    .feature {
-      min-height: 166px; padding: 22px; border: 1px solid var(--line); background: var(--card);
-    }
-    .feature .index { color: var(--accent); font: .7rem var(--mono); }
-    .feature h3 { margin: 17px 0 6px; font-size: 1rem; letter-spacing: -.02em; }
-    .feature p { margin: 0; color: var(--muted); font-size: .88rem; }
-    .details { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    .detail {
-      padding: 27px; border: 1px solid var(--line); background: rgba(255,253,249,.68);
-    }
-    .detail h3 { margin: 0 0 13px; font-size: 1rem; }
-    .detail p { margin: 0; color: var(--muted); font-size: .92rem; }
-    .tags { display: flex; flex-wrap: wrap; gap: 8px; }
-    .tag { padding: 6px 10px; border: 1px solid var(--line); color: #55514b; font: .75rem var(--mono); }
-    .links { display: grid; gap: 9px; }
-    .links a { color: var(--accent-dark); font-size: .9rem; }
-    footer {
-      display: flex; justify-content: space-between; gap: 18px;
-      padding: 26px 0 35px; border-top: 1px solid var(--line);
-      color: var(--muted); font-size: .8rem;
-    }
-    @media (max-width: 760px) {
-      .hero { grid-template-columns: 1fr; gap: 38px; padding: 70px 0; }
-      .hero-art { min-height: 280px; }
-      .features { grid-template-columns: repeat(2, 1fr); }
-      section.content { padding: 68px 0; }
-    }
-    @media (max-width: 540px) {
-      .shell { width: min(var(--max), calc(100% - 30px)); }
-      header { min-height: 0; padding: 18px 0; align-items: flex-start; flex-direction: column; }
-      nav { flex-wrap: wrap; gap: 12px 20px; }
-      h1 { font-size: clamp(3.25rem, 17vw, 5rem); }
-      .features, .details { grid-template-columns: 1fr; }
-      .feature { min-height: 0; }
-      footer { flex-direction: column; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      html { scroll-behavior: auto; }
-      *, *::before, *::after { transition: none !important; }
-    }
+    :root{color-scheme:dark;--bg:#111110;--panel:#191918;--panel2:#20201e;--text:#f3f0e9;--muted:#aaa69d;--line:#ffffff17;--accent:#d85a3a;--accent2:#f18a67;--soft:#d85a3a1c;--shadow:0 24px 80px #0006}
+    [data-theme="light"]{color-scheme:light;--bg:#f5f2ed;--panel:#fffdfa;--panel2:#eee9e2;--text:#211e1a;--muted:#716b63;--line:#211e1a18;--accent:#bd472d;--accent2:#d85a3a;--soft:#d85a3a18;--shadow:0 24px 70px #3b2a1b14}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth;scroll-padding-top:90px}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:"DM Sans",sans-serif;line-height:1.7;transition:background .35s,color .35s}
+    body[dir="rtl"]{font-family:"Vazirmatn",sans-serif;line-height:2.15}
+    button,a{font:inherit}
+    a{color:inherit;text-decoration:none}
+    button{color:inherit}
+    .wrap{width:min(1120px,calc(100% - 44px));margin:auto}
+    .nav{height:78px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(18px)}
+    .brand{display:flex;align-items:center;gap:12px;font:800 19px Manrope,sans-serif;letter-spacing:-.04em}
+    .brand img{width:30px;height:30px;object-fit:contain}
+    .navright{display:flex;align-items:center;gap:10px}
+    .control{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:9px 13px;cursor:pointer;font-size:13px}
+    .control:hover{border-color:var(--accent)}
+    .hero{min-height:650px;display:grid;grid-template-columns:1.04fr .96fr;align-items:center;gap:50px;padding:85px 0 100px;position:relative}
+    .eyebrow{color:var(--accent2);font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+    h1{font:800 clamp(48px,7vw,82px)/1.04 Manrope,sans-serif;letter-spacing:-.065em;margin:20px 0 24px;max-width:720px}
+    body[dir="rtl"] h1{font:800 clamp(42px,6vw,70px)/1.55 Vazirmatn,sans-serif;letter-spacing:0}
+    .lead{font-size:18px;line-height:1.85;color:var(--muted);max-width:570px}
+    body[dir="rtl"] .lead{line-height:2.3}
+    .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;padding:13px 19px;border-radius:999px;font-size:14px;font-weight:700;border:1px solid var(--line);transition:transform .25s,border-color .25s,background .25s}
+    .btn:hover{transform:translateY(-3px);border-color:var(--accent)}
+    .btn.primary{background:var(--accent);color:white;border-color:var(--accent)}
+    .markstage{min-height:420px;border:1px solid var(--line);border-radius:32px;background:radial-gradient(circle at 50% 44%,var(--soft),transparent 58%),var(--panel);display:grid;place-items:center;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+    .markstage:before,.markstage:after{content:"";position:absolute;border:1px solid var(--line);border-radius:50%;width:310px;height:310px}
+    .markstage:after{width:390px;height:390px}
+    .markstage img{width:180px;height:190px;object-fit:contain;z-index:1;filter:drop-shadow(0 18px 35px #d85a3a35);animation:float 7s ease-in-out infinite}
+    .stagecaption{position:absolute;bottom:25px;color:var(--muted);font-size:12px;letter-spacing:.12em;text-transform:uppercase}
+    @keyframes float{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-12px) rotate(2deg)}}
+    section{padding:92px 0;border-top:1px solid var(--line)}
+    .sectionhead{max-width:650px;margin-bottom:38px}
+    h2{font:700 clamp(30px,4vw,46px)/1.18 Manrope,sans-serif;letter-spacing:-.045em;margin:12px 0}
+    body[dir="rtl"] h2{font:700 clamp(28px,4vw,42px)/1.65 Vazirmatn,sans-serif;letter-spacing:0}
+    .sectionhead p{color:var(--muted);font-size:16px}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    .feature{padding:24px;border:1px solid var(--line);border-radius:20px;background:var(--panel);min-height:180px;transition:transform .3s,border-color .3s}
+    .feature:hover{transform:translateY(-5px);border-color:color-mix(in srgb,var(--accent) 55%,var(--line))}
+    .num{font:700 12px Manrope,sans-serif;color:var(--accent2);letter-spacing:.1em}
+    h3{font:700 17px Manrope,sans-serif;margin:15px 0 7px}
+    .feature p{font-size:14px;color:var(--muted);margin:0;line-height:1.8}
+    body[dir="rtl"] .feature p,body[dir="rtl"] .layer span,body[dir="rtl"] .status p{line-height:2.05}
+    .architecture{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .layer{background:var(--panel2);padding:25px;border-radius:18px;border:1px solid var(--line)}
+    .layer strong{display:block;font:700 20px Manrope,sans-serif;margin-bottom:8px}
+    .layer span{font-size:14px;color:var(--muted)}
+    .status{border:1px solid var(--line);border-radius:26px;background:var(--panel);padding:34px;display:grid;grid-template-columns:1fr auto;gap:30px;align-items:center}
+    .status p{color:var(--muted);max-width:720px;margin-bottom:0}
+    .statusmark{width:78px;height:78px;border-radius:50%;display:grid;place-items:center;background:var(--soft);color:var(--accent2);font-size:30px}
+    .foot{padding:35px 0 55px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;color:var(--muted);font-size:13px}
+    .footlinks{display:flex;gap:18px;flex-wrap:wrap}
+    .foot a:hover{color:var(--accent2)}
+    .reveal{opacity:1;transform:none}
+    .js .reveal{opacity:0;transform:translateY(22px);transition:opacity .75s ease,transform .75s cubic-bezier(.2,.75,.25,1)}
+    .js .reveal.visible{opacity:1;transform:none}
+    @media(max-width:800px){.hero{grid-template-columns:1fr;padding:65px 0 75px;gap:35px}.markstage{min-height:330px}.grid{grid-template-columns:repeat(2,1fr)}.architecture{grid-template-columns:1fr}.status{grid-template-columns:1fr}.statusmark{display:none}}
+    @media(max-width:540px){.wrap{width:min(100% - 30px,1120px)}.nav{height:68px}.brand{font-size:17px}.control{padding:8px 10px}.grid{grid-template-columns:1fr}.hero{min-height:0}.lead{font-size:16px}section{padding:68px 0}.markstage{min-height:285px}.markstage img{width:145px;height:155px}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
   </style>
 </head>
 <body>
-  <div class="shell">
-    <header>
-      <a class="brand" href="#top" aria-label="Weloury home">
-        <img src="./logo.svg" alt="">
-        <span>weloury</span>
-      </a>
-      <nav aria-label="Main navigation">
-        <a href="#features">Features</a>
-        <a href="#about">About</a>
-        <a href="#project">Project</a>
-      </nav>
+  <div class="wrap">
+    <header class="nav">
+      <a class="brand" href="#top"><img src="./logo.svg" alt=""><span>weloury</span></a>
+      <div class="navright">
+        <select class="control" id="language" aria-label="Language">
+          <option value="en">English</option><option value="de">Deutsch</option><option value="fa">فارسی</option>
+        </select>
+        <button class="control" id="theme" type="button" aria-label="Toggle theme">☼</button>
+      </div>
     </header>
 
     <main id="top">
-      <section class="hero">
-        <div>
-          <div class="eyebrow">A desktop app for your own machine</div>
-          <h1>Keep your system<br><em>in view.</em></h1>
-          <p class="lead">
-            Weloury brings system information, processes, services, storage, network activity,
-            logs and automation into one place. It is being built for people who would rather
-            understand their machine without jumping between a pile of separate tools.
-          </p>
+      <div class="hero">
+        <div class="reveal">
+          <div class="eyebrow" data-i="eyebrow">A desktop workspace</div>
+          <h1 data-i="heroTitle">A clearer view of your machine.</h1>
+          <p class="lead" data-i="heroText">Processes, services, storage, network activity, containers and automation. Weloury brought the tools you reach for most into one local desktop workspace.</p>
           <div class="actions">
-            <a class="button primary" href="https://github.com/mh3nj/Weloury">View the repository ↗</a>
-            <a class="button secondary" href="https://github.com/mh3nj/Weloury/blob/main/README.md">Read the README</a>
+            <a class="btn primary" href="https://github.com/mh3nj/Weloury" data-i="source">Explore the source</a>
+            <a class="btn" href="#story" data-i="storyLink">The story behind it</a>
           </div>
         </div>
-        <div class="hero-art" aria-label="Weloury logo">
-          <img src="./logo.svg" alt="Weloury mark">
-          <span class="art-note">Weloury / Desktop software</span>
-        </div>
-      </section>
-
-      <div class="status">
-        <div class="status-mark">!</div>
-        <div>
-          <strong>Still in development</strong>
-          <p>
-            The backend and frontend are in the repository, but the Tauri desktop project
-            is currently missing from the public tree. There are no installers or published
-            releases yet. Windows and macOS also need testing on real hardware.
-          </p>
+        <div class="markstage reveal" aria-label="Weloury logo">
+          <img src="./logo.svg" alt="Weloury">
+          <div class="stagecaption" data-i="caption">Made to stay close to the system</div>
         </div>
       </div>
 
-      <section class="content" id="features">
-        <div class="section-head">
-          <div class="section-label">Inside Weloury</div>
-          <h2>The things you check, together.</h2>
-          <p>
-            The current interface covers the main parts of day-to-day system inspection,
-            with some features depending on the operating system and tools installed locally.
-          </p>
+      <section id="features">
+        <div class="sectionhead reveal">
+          <div class="eyebrow" data-i="featuresEyebrow">Inside Weloury</div>
+          <h2 data-i="featuresTitle">The things happening under the surface.</h2>
+          <p data-i="featuresIntro">A practical set of system tools, brought together without sending your machine's day-to-day state to a hosted dashboard.</p>
         </div>
-        <div class="features">
-          <article class="feature"><div class="index">01 / SYSTEM</div><h3>Overview</h3><p>System identity, uptime and resource information.</p></article>
-          <article class="feature"><div class="index">02 / PROCESSES</div><h3>Processes</h3><p>Find running processes, inspect details and manage them with confirmation.</p></article>
-          <article class="feature"><div class="index">03 / SERVICES</div><h3>Services</h3><p>View service state and use supported service controls.</p></article>
-          <article class="feature"><div class="index">04 / STORAGE</div><h3>Storage and GPU</h3><p>Inspect mounted drives, usage and available hardware information.</p></article>
-          <article class="feature"><div class="index">05 / NETWORK</div><h3>Network</h3><p>See interfaces, addresses, listening ports and active connections.</p></article>
-          <article class="feature"><div class="index">06 / CONTAINERS</div><h3>Containers</h3><p>Inspect Docker containers and their recent activity.</p></article>
-          <article class="feature"><div class="index">07 / LOGS</div><h3>Logs and events</h3><p>Follow application logs and browse recorded system activity.</p></article>
-          <article class="feature"><div class="index">08 / HEALTH</div><h3>Health checks</h3><p>Watch processes, services, ports, endpoints and resource thresholds.</p></article>
-          <article class="feature"><div class="index">09 / AUTOMATION</div><h3>Automation and schedules</h3><p>Set up event-based rules and scheduled actions.</p></article>
+        <div class="grid">
+          <article class="feature reveal"><div class="num">01</div><h3 data-i="f1t">Processes & services</h3><p data-i="f1">Find running processes, inspect details, and manage services with confirmation for disruptive actions.</p></article>
+          <article class="feature reveal"><div class="num">02</div><h3 data-i="f2t">Storage & network</h3><p data-i="f2">See mounted filesystems, network interfaces, listening ports and active connections.</p></article>
+          <article class="feature reveal"><div class="num">03</div><h3 data-i="f3t">Health checks</h3><p data-i="f3">Keep an eye on processes, services, ports, endpoints and resource thresholds.</p></article>
+          <article class="feature reveal"><div class="num">04</div><h3 data-i="f4t">Logs & events</h3><p data-i="f4">Follow application logs and browse the events recorded across the application.</p></article>
+          <article class="feature reveal"><div class="num">05</div><h3 data-i="f5t">Schedules & automation</h3><p data-i="f5">Connect events and schedules to conditions and ordered actions.</p></article>
+          <article class="feature reveal"><div class="num">06</div><h3 data-i="f6t">Containers</h3><p data-i="f6">Discover Docker containers, check their state, manage basic actions and read recent logs.</p></article>
         </div>
       </section>
 
-      <section class="content" id="about">
-        <div class="section-head">
-          <div class="section-label">How it is built</div>
-          <h2>Local by design.</h2>
-          <p>
-            The app is built around a local Go service and a desktop interface. Its data is
-            stored on the machine rather than in a hosted account.
-          </p>
+      <section id="architecture">
+        <div class="sectionhead reveal">
+          <div class="eyebrow" data-i="stackEyebrow">Under the hood</div>
+          <h2 data-i="stackTitle">Three parts, one desktop app.</h2>
+          <p data-i="stackIntro">The interface, system logic and native desktop lifecycle each have a clear place.</p>
         </div>
-        <div class="details">
-          <div class="detail">
-            <h3>Technology</h3>
-            <div class="tags">
-              <span class="tag">Go</span><span class="tag">React</span><span class="tag">TypeScript</span>
-              <span class="tag">Vite</span><span class="tag">Tauri 2</span><span class="tag">Rust</span>
-              <span class="tag">SQLite</span>
-            </div>
-          </div>
-          <div class="detail">
-            <h3>Project notes</h3>
-            <div class="links">
-              <a href="https://github.com/mh3nj/Weloury/blob/main/ARCHITECTURE.md">Architecture</a>
-              <a href="https://github.com/mh3nj/Weloury/blob/main/DEVELOPMENT.md">Development notes</a>
-              <a href="https://github.com/mh3nj/Weloury/blob/main/CHANGELOG.md">Changelog</a>
-              <a href="https://github.com/mh3nj/Weloury/blob/main/SECURITY.md">Security</a>
-            </div>
-          </div>
+        <div class="architecture reveal">
+          <div class="layer"><strong>Go</strong><span data-i="go">System operations, application logic, local API and SQLite storage.</span></div>
+          <div class="layer"><strong>React + TypeScript</strong><span data-i="react">The interface for browsing and working with system information.</span></div>
+          <div class="layer"><strong>Rust + Tauri</strong><span data-i="rust">The native desktop shell and backend process lifecycle.</span></div>
         </div>
       </section>
 
-      <section class="content" id="project">
-        <div class="section-head">
-          <div class="section-label">The project</div>
-          <h2>Work in progress, in the open.</h2>
-          <p>
-            The source is public. The backend and frontend can be built and checked separately;
-            a complete desktop build is not available until the Tauri project is restored and
-            tested end to end.
-          </p>
-          <div class="actions">
-            <a class="button primary" href="https://github.com/mh3nj/Weloury">Weloury on GitHub ↗</a>
+      <section id="story">
+        <div class="status reveal">
+          <div>
+            <div class="eyebrow" data-i="statusEyebrow">Where the project stands</div>
+            <h2 data-i="statusTitle">A finished chapter, not an abandoned idea.</h2>
+            <p data-i="statusText">Weloury began as FORGE. It is no longer being developed as a standalone application. Its work is being carried forward with Stellarie into a much larger commercial application, rewritten in Rust. This repository stays here as a record of the original project.</p>
+            <div class="actions">
+              <a class="btn primary" href="https://github.com/mh3nj/Weloury" data-i="repo">Visit the repository</a>
+              <a class="btn" href="https://github.com/mh3nj/Weloury/blob/main/RELEASE_NOTES.md" data-i="release">Project note</a>
+            </div>
           </div>
+          <div class="statusmark" aria-hidden="true">↗</div>
         </div>
       </section>
     </main>
 
-    <footer>
-      <span>Weloury · Desktop software</span>
-      <span><a href="https://github.com/mh3nj/Weloury">Source code on GitHub ↗</a></span>
+    <footer class="foot">
+      <span>© <span id="year"></span> Weloury · <span data-i="footer">Preserved with care.</span></span>
+      <div class="footlinks">
+        <a href="https://github.com/mh3nj/Weloury">GitHub</a>
+        <a href="https://mh3n.com">mh3n.com</a>
+        <a href="https://dahgan.com">Dahgan</a>
+      </div>
     </footer>
   </div>
+
+  <script>
+    document.documentElement.classList.add("js");
+    const copy = {
+      en:{
+        eyebrow:"A desktop workspace",heroTitle:"A clearer view of your machine.",heroText:"Processes, services, storage, network activity, containers and automation. Weloury brought the tools you reach for most into one local desktop workspace.",source:"Explore the source",storyLink:"The story behind it",caption:"Made to stay close to the system",
+        featuresEyebrow:"Inside Weloury",featuresTitle:"The things happening under the surface.",featuresIntro:"A practical set of system tools, brought together without sending your machine's day-to-day state to a hosted dashboard.",
+        f1t:"Processes & services",f1:"Find running processes, inspect details, and manage services with confirmation for disruptive actions.",f2t:"Storage & network",f2:"See mounted filesystems, network interfaces, listening ports and active connections.",f3t:"Health checks",f3:"Keep an eye on processes, services, ports, endpoints and resource thresholds.",f4t:"Logs & events",f4:"Follow application logs and browse the events recorded across the application.",f5t:"Schedules & automation",f5:"Connect events and schedules to conditions and ordered actions.",f6t:"Containers",f6:"Discover Docker containers, check their state, manage basic actions and read recent logs.",
+        stackEyebrow:"Under the hood",stackTitle:"Three parts, one desktop app.",stackIntro:"The interface, system logic and native desktop lifecycle each have a clear place.",go:"System operations, application logic, local API and SQLite storage.",react:"The interface for browsing and working with system information.",rust:"The native desktop shell and backend process lifecycle.",
+        statusEyebrow:"Where the project stands",statusTitle:"A finished chapter, not an abandoned idea.",statusText:"Weloury began as FORGE. It is no longer being developed as a standalone application. Its work is being carried forward with Stellarie into a much larger commercial application, rewritten in Rust. This repository stays here as a record of the original project.",repo:"Visit the repository",release:"Project note",footer:"Preserved with care."
+      },
+      de:{
+        eyebrow:"Ein Desktop-Arbeitsplatz",heroTitle:"Mehr Überblick über deinen Rechner.",heroText:"Prozesse, Dienste, Speicher, Netzwerkaktivität, Container und Automatisierung. Weloury brachte die wichtigsten Werkzeuge an einem lokalen Desktop-Ort zusammen.",source:"Quellcode ansehen",storyLink:"Die Geschichte dahinter",caption:"Nah am System entwickelt",
+        featuresEyebrow:"Weloury im Überblick",featuresTitle:"Was unter der Oberfläche passiert.",featuresIntro:"Eine praktische Sammlung von Systemwerkzeugen, ohne den laufenden Zustand deines Rechners an ein gehostetes Dashboard zu senden.",
+        f1t:"Prozesse und Dienste",f1:"Laufende Prozesse finden, Details prüfen und Dienste nach einer Bestätigung verwalten.",f2t:"Speicher und Netzwerk",f2:"Eingehängte Dateisysteme, Netzwerkschnittstellen, offene Ports und aktive Verbindungen sehen.",f3t:"Systemprüfungen",f3:"Prozesse, Dienste, Ports, Endpunkte und Ressourcengrenzen im Blick behalten.",f4t:"Protokolle und Ereignisse",f4:"Anwendungsprotokolle verfolgen und aufgezeichnete Ereignisse durchsuchen.",f5t:"Zeitpläne und Automatisierung",f5:"Ereignisse und Zeitpläne mit Bedingungen und geordneten Aktionen verbinden.",f6t:"Container",f6:"Docker-Container finden, ihren Zustand prüfen, grundlegende Aktionen ausführen und aktuelle Protokolle lesen.",
+        stackEyebrow:"Technik",stackTitle:"Drei Bausteine, eine Desktop-App.",stackIntro:"Oberfläche, Systemlogik und nativer Desktop-Lebenszyklus haben jeweils eine klare Aufgabe.",go:"Systemoperationen, Anwendungslogik, lokale API und SQLite-Speicher.",react:"Die Oberfläche zum Anzeigen und Verwalten von Systeminformationen.",rust:"Die native Desktop-Hülle und Verwaltung des Backend-Prozesses.",
+        statusEyebrow:"Projektstatus",statusTitle:"Ein abgeschlossenes Kapitel, keine vergessene Idee.",statusText:"Weloury begann unter dem Namen FORGE. Die eigenständige Entwicklung wird nicht fortgesetzt. Die Arbeit fließt zusammen mit Stellarie in eine deutlich größere kommerzielle Anwendung ein, die vollständig in Rust neu geschrieben wird. Dieses Repository bleibt als Dokumentation des ursprünglichen Projekts erhalten.",repo:"Repository ansehen",release:"Projekthinweis",footer:"Mit Sorgfalt bewahrt."
+      },
+      fa:{
+        eyebrow:"یک محیط دسکتاپ",heroTitle:"نگاهی روشن‌تر به سیستم خودتان.",heroText:"پردازه‌ها، سرویس‌ها، فضای ذخیره‌سازی، فعالیت شبکه، کانتینرها و خودکارسازی. ولوری ابزارهایی را که بیشتر به آن‌ها نیاز دارید در یک محیط دسکتاپ محلی کنار هم قرار می‌داد.",source:"مشاهده کد منبع",storyLink:"داستان پروژه",caption:"نزدیک به خود سیستم",
+        featuresEyebrow:"درون ولوری",featuresTitle:"آنچه در پشت صحنه می‌گذرد.",featuresIntro:"مجموعه‌ای کاربردی از ابزارهای مدیریت سیستم، بدون فرستادن وضعیت روزمره رایانه به یک داشبورد میزبانی‌شده.",
+        f1t:"پردازه‌ها و سرویس‌ها",f1:"پردازه‌های در حال اجرا را پیدا کنید، جزئیاتشان را ببینید و سرویس‌ها را با تأیید اقدامات حساس مدیریت کنید.",f2t:"ذخیره‌سازی و شبکه",f2:"فایل‌سیستم‌های متصل، رابط‌های شبکه، درگاه‌های در حال شنود و اتصال‌های فعال را ببینید.",f3t:"بررسی سلامت",f3:"وضعیت پردازه‌ها، سرویس‌ها، درگاه‌ها، نشانی‌ها و آستانه‌های منابع را زیر نظر بگیرید.",f4t:"گزارش‌ها و رویدادها",f4:"گزارش‌های برنامه را دنبال کنید و رویدادهای ثبت‌شده را مرور کنید.",f5t:"زمان‌بندی و خودکارسازی",f5:"رویدادها و زمان‌بندی‌ها را به شرط‌ها و اقدام‌های مرتب‌شده متصل کنید.",f6t:"کانتینرها",f6:"کانتینرهای داکر را پیدا کنید، وضعیتشان را ببینید، اقدام‌های پایه را انجام دهید و گزارش‌های اخیر را بخوانید.",
+        stackEyebrow:"ساختار فنی",stackTitle:"سه بخش، یک برنامه دسکتاپ.",stackIntro:"رابط کاربری، منطق سیستم و چرخه عمر برنامه بومی هرکدام مسئولیت مشخصی دارند.",go:"عملیات سیستم، منطق برنامه، رابط محلی و ذخیره‌سازی SQLite.",react:"رابطی برای مشاهده و کار با اطلاعات سیستم.",rust:"پوسته بومی دسکتاپ و مدیریت چرخه عمر پردازه بک‌اند.",
+        statusEyebrow:"وضعیت پروژه",statusTitle:"فصلی به پایان رسیده، نه ایده‌ای فراموش‌شده.",statusText:"ولوری در ابتدا با نام FORGE ساخته شد. توسعه مستقل آن ادامه پیدا نمی‌کند. دستاوردهای این پروژه همراه با Stellarie در یک برنامه تجاری بسیار بزرگ‌تر ادغام می‌شوند که از ابتدا با Rust بازنویسی شده است. این مخزن به‌عنوان بخشی از تاریخچه پروژه اصلی باقی می‌ماند.",repo:"مشاهده مخزن",release:"یادداشت پروژه",footer:"با دقت حفظ شده است."
+      }
+    };
+    const language=document.getElementById("language");
+    function setLanguage(lang){
+      const t=copy[lang]||copy.en;
+      document.documentElement.lang=lang;
+      document.documentElement.dir=lang==="fa"?"rtl":"ltr";
+      document.body.dir=lang==="fa"?"rtl":"ltr";
+      document.querySelectorAll("[data-i]").forEach(el=>{const key=el.dataset.i;if(t[key])el.textContent=t[key]});
+      document.title=lang==="fa"?"ولوری | نگاهی به سیستم":lang==="de"?"Weloury | Mehr Überblick über deinen Rechner":"Weloury | A closer look at your machine";
+      document.querySelector('meta[name="description"]').content=t.heroText;
+      localStorage.setItem("weloury-lang",lang);
+    }
+    language.value=localStorage.getItem("weloury-lang")||"en";
+    setLanguage(language.value);
+    language.addEventListener("change",e=>setLanguage(e.target.value));
+    const themeButton=document.getElementById("theme");
+    const savedTheme=localStorage.getItem("weloury-theme")||"dark";
+    document.documentElement.dataset.theme=savedTheme;
+    themeButton.textContent=savedTheme==="dark"?"☼":"☾";
+    themeButton.addEventListener("click",()=>{
+      const next=document.documentElement.dataset.theme==="dark"?"light":"dark";
+      document.documentElement.dataset.theme=next;
+      themeButton.textContent=next==="dark"?"☼":"☾";
+      localStorage.setItem("weloury-theme",next);
+    });
+    document.getElementById("year").textContent=new Date().getFullYear();
+    if ("IntersectionObserver" in window) {
+      const observer=new IntersectionObserver(entries=>{
+        entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add("visible");observer.unobserve(entry.target)}});
+      },{threshold:.08});
+      document.querySelectorAll(".reveal").forEach(el=>observer.observe(el));
+    } else {
+      document.querySelectorAll(".reveal").forEach(el=>el.classList.add("visible"));
+    }
+  </script>
 </body>
 </html>
